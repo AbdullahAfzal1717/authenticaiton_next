@@ -9,11 +9,11 @@ connectDB();
 export const POST = async (request: NextRequest) => {
   try {
     const reqBody = await request.json();
-    const { username, email, password } = reqBody;
+    const { userName, email, password } = reqBody;
     //validation
     console.log(reqBody);
 
-    const user = await User.findOne(email);
+    const user = await User.findOne({ email });
 
     if (user) {
       return NextResponse.json(
@@ -26,7 +26,7 @@ export const POST = async (request: NextRequest) => {
     const hashedPassword = await bcryptjs.hash(password, salt);
 
     const newUser = new User({
-      username,
+      userName,
       email,
       password: hashedPassword,
     });
@@ -36,10 +36,10 @@ export const POST = async (request: NextRequest) => {
     await sendEmail({ email, emailType: "VERIFY", userId: savedUser._id });
 
     return NextResponse.json({
-        message: "User Registered Successfully",
-        success:true,
-        savedUser
-    })
+      message: "User Registered Successfully",
+      success: true,
+      savedUser,
+    });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

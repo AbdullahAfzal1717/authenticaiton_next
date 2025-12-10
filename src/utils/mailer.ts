@@ -33,11 +33,14 @@ export const sendEmail = async ({
       });
     }
 
-    const transport = nodemailer.createTransport(
-      MailtrapTransport({
-        token: mailerToken,
-      })
-    );
+    const transport = nodemailer.createTransport({
+      host: "live.smtp.mailtrap.io",
+      port: 2525,
+      auth: {
+        user: "api",
+        pass: "d692a5e848150665a1535342774a609a",
+      },
+    });
     const mailOptions = {
       from: "hello@abdullah.com",
       to: email,
@@ -55,8 +58,9 @@ export const sendEmail = async ({
     };
 
     const info = await transport.sendMail(mailOptions);
+    console.log(info);
     return info;
   } catch (error: any) {
-    throw new Error("Error sending email", error.message);
+    throw new Error("Error sending email" + error.message);
   }
 };
